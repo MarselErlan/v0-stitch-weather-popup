@@ -18,19 +18,12 @@ interface WeatherData {
 export function WeatherPopup() {
   const [weather, setWeather] = useState<WeatherData | null>(null)
   const [loading, setLoading] = useState(true)
-  const [position, setPosition] = useState({ x: 0, y: 0 })
-  const [isDragging, setIsDragging] = useState(false)
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
-  const [isMinimized, setIsMinimized] = useState(false)
   const [showMessage, setShowMessage] = useState(false)
+  const [isElectron, setIsElectron] = useState(false)
 
   useEffect(() => {
+    setIsElectron(typeof window !== "undefined" && window.electronAPI !== undefined)
     fetchWeather()
-    // Center the popup on mount
-    setPosition({
-      x: window.innerWidth / 2 - 200,
-      y: window.innerHeight / 2 - 250,
-    })
   }, [])
 
   const fetchWeather = async () => {
@@ -76,39 +69,6 @@ export function WeatherPopup() {
     }
   }
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if ((e.target as HTMLElement).closest("button")) return
-    setIsDragging(true)
-    setDragOffset({
-      x: e.clientX - position.x,
-      y: e.clientY - position.y,
-    })
-  }
-
-  const handleMouseMove = (e: MouseEvent) => {
-    if (isDragging) {
-      setPosition({
-        x: e.clientX - dragOffset.x,
-        y: e.clientY - dragOffset.y,
-      })
-    }
-  }
-
-  const handleMouseUp = () => {
-    setIsDragging(false)
-  }
-
-  useEffect(() => {
-    if (isDragging) {
-      window.addEventListener("mousemove", handleMouseMove)
-      window.addEventListener("mouseup", handleMouseUp)
-      return () => {
-        window.removeEventListener("mousemove", handleMouseMove)
-        window.removeEventListener("mouseup", handleMouseUp)
-      }
-    }
-  }, [isDragging, dragOffset])
-
   const getWeatherIcon = () => {
     if (!weather) return <Cloud className="w-8 h-8" />
 
@@ -131,44 +91,44 @@ export function WeatherPopup() {
     setTimeout(() => setShowMessage(false), 2000)
   }
 
-  if (isMinimized) {
-    return (
-      <div
-        className="fixed bottom-4 right-4 bg-gradient-to-br from-purple-400 to-pink-400 rounded-lg shadow-2xl p-3 cursor-pointer hover:scale-105 transition-transform animate-bounce-in"
-        onClick={() => setIsMinimized(false)}
-      >
-        <div className="flex items-center gap-2 text-white font-bold">
-          <Cloud className="w-5 h-5" />
-          <span>Weather</span>
-        </div>
-      </div>
-    )
+  const handleMinimize = () => {
+    if (isElectron && window.electronAPI) {
+      window.electronAPI.minimizeWindow()
+    }
+  }
+
+  const handleClose = () => {
+    if (isElectron && window.electronAPI) {
+      window.electronAPI.closeWindow()
+    } else {
+      window.close()
+    }
   }
 
   return (
     <div
-      className="fixed bg-gradient-to-br from-purple-100 via-pink-100 to-blue-100 rounded-2xl shadow-2xl overflow-hidden cursor-move select-none animate-bounce-in"
+      className="bg-gradient-to-br from-purple-100 via-pink-100 to-blue-100 rounded-2xl shadow-2xl overflow-hidden select-none animate-bounce-in"
       style={{
-        left: `${position.x}px`,
-        top: `${position.y}px`,
         width: "400px",
         border: "4px solid white",
         boxShadow: "0 20px 60px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.5) inset",
       }}
-      onMouseDown={handleMouseDown}
     >
-      {/* Window Title Bar */}
-      <div className="bg-gradient-to-r from-purple-400 to-pink-400 px-4 py-3 flex items-center justify-between">
+      {/* Window Title Bar - draggable area for Electron */}
+      <div
+        className="bg-gradient-to-r from-purple-400 to-pink-400 px-4 py-3 flex items-center justify-between"
+        style={{ WebkitAppRegion: "drag" } as React.CSSProperties}
+      >
         <div className="flex items-center gap-2">
           <Cloud className="w-5 h-5 text-white" />
           <h2 className="text-white font-bold text-lg tracking-wide">Chicago Weather</h2>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2" style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}>
           <Button
             size="icon"
             variant="ghost"
             className="w-7 h-7 rounded-full bg-yellow-300 hover:bg-yellow-400 transition-colors"
-            onClick={() => setIsMinimized(true)}
+            onClick={handleMinimize}
           >
             <Minus className="w-4 h-4 text-gray-700" />
           </Button>
@@ -176,7 +136,7 @@ export function WeatherPopup() {
             size="icon"
             variant="ghost"
             className="w-7 h-7 rounded-full bg-red-400 hover:bg-red-500 transition-colors"
-            onClick={() => window.close()}
+            onClick={handleClose}
           >
             <X className="w-4 h-4 text-white" />
           </Button>
