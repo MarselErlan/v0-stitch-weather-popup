@@ -26,10 +26,15 @@ export function WeatherPopup() {
   const fetchWeather = async () => {
     try {
       setLoading(true)
-      // Using OpenWeatherMap API - free tier
+      // Using OpenWeatherMap API - free tier with timeout
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 5000) // 5 second timeout
+      
       const response = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?q=Chicago&units=imperial&appid=8a9380703f509f16b0ba9e40518dace0`,
+        { signal: controller.signal }
       )
+      clearTimeout(timeoutId)
 
       if (!response.ok) {
         // Fallback to mock data for demo
@@ -53,13 +58,14 @@ export function WeatherPopup() {
         icon: data.weather[0].main.toLowerCase(),
       })
     } catch (error) {
-      // Fallback to mock data
+      // Fallback to mock data on error or timeout
+      console.log("Weather API failed, using fallback data:", error)
       setWeather({
-        temp: 45,
-        description: "Partly cloudy",
+        temp: 44,
+        description: "scattered clouds",
         humidity: 65,
         windSpeed: 12,
-        icon: "partly-cloudy",
+        icon: "clouds",
       })
     } finally {
       setLoading(false)
