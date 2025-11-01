@@ -1,11 +1,7 @@
-import { app, BrowserWindow, screen } from "electron"
-import * as path from "path"
-import { fileURLToPath } from "url"
+import { app, BrowserWindow, screen, ipcMain } from "electron";
+import * as path from "path";
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-
-let mainWindow: BrowserWindow | null = null
+let mainWindow: BrowserWindow | null = null;
 
 function createWindow() {
   // Get primary display dimensions
@@ -15,11 +11,9 @@ function createWindow() {
   // Create the browser window with Mac-specific settings
   mainWindow = new BrowserWindow({
     width: 450,
-    height: 600,
+    height: 650,
     x: Math.floor(width / 2 - 225),
-    y: Math.floor(height / 2 - 300),
-    frame: false, // Remove default window frame for custom design
-    transparent: true, // Allow transparent background
+    y: Math.floor(height / 2 - 325),
     resizable: false,
     alwaysOnTop: true, // Keep popup on top like a widget
     skipTaskbar: false,
@@ -29,16 +23,15 @@ function createWindow() {
       contextIsolation: true,
       webSecurity: true,
     },
-    titleBarStyle: "hidden", // Mac-specific: hide title bar
-    vibrancy: "under-window", // Mac-specific: add blur effect
-    visualEffectState: "active",
+    titleBarStyle: "hiddenInset", // Mac-specific: native titlebar with traffic lights
+    backgroundColor: "#f3e5f5", // Light purple background
   })
 
   // Load the app
   if (process.env.NODE_ENV === "development") {
     mainWindow.loadURL("http://localhost:3000")
-    // Open DevTools in development
-    mainWindow.webContents.openDevTools({ mode: "detach" })
+    // DevTools disabled - causing SIGTRAP crash on Mac
+    // Uncomment to enable: mainWindow.webContents.openDevTools({ mode: "detach" })
   } else {
     mainWindow.loadFile(path.join(__dirname, "../out/index.html"))
   }
@@ -71,8 +64,7 @@ app.on("window-all-closed", () => {
   }
 })
 
-// Handle IPC messages from renderer
-import { ipcMain } from "electron"
+// Handle IPC messages from renderer (ipcMain already imported above)
 
 ipcMain.on("minimize-window", () => {
   if (mainWindow) {
@@ -86,7 +78,7 @@ ipcMain.on("close-window", () => {
   }
 })
 
-ipcMain.on("set-always-on-top", (event, flag: boolean) => {
+ipcMain.on("set-always-on-top", (_event: any, flag: boolean) => {
   if (mainWindow) {
     mainWindow.setAlwaysOnTop(flag)
   }

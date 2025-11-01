@@ -3,8 +3,7 @@
 import type React from "react"
 
 import { useState, useEffect } from "react"
-import { Cloud, Sun, CloudRain, Wind, X, Minus } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Cloud, Sun, CloudRain, Wind } from "lucide-react"
 import Image from "next/image"
 
 interface WeatherData {
@@ -19,10 +18,8 @@ export function WeatherPopup() {
   const [weather, setWeather] = useState<WeatherData | null>(null)
   const [loading, setLoading] = useState(true)
   const [showMessage, setShowMessage] = useState(false)
-  const [isElectron, setIsElectron] = useState(false)
 
   useEffect(() => {
-    setIsElectron(typeof window !== "undefined" && window.electronAPI !== undefined)
     fetchWeather()
   }, [])
 
@@ -91,55 +88,22 @@ export function WeatherPopup() {
     setTimeout(() => setShowMessage(false), 2000)
   }
 
-  const handleMinimize = () => {
-    if (isElectron && window.electronAPI) {
-      window.electronAPI.minimizeWindow()
-    }
-  }
-
-  const handleClose = () => {
-    if (isElectron && window.electronAPI) {
-      window.electronAPI.closeWindow()
-    } else {
-      window.close()
-    }
-  }
-
   return (
     <div
-      className="bg-gradient-to-br from-purple-100 via-pink-100 to-blue-100 rounded-2xl shadow-2xl overflow-hidden select-none animate-bounce-in"
+      className="bg-gradient-to-br from-purple-100 via-pink-100 to-blue-100 overflow-hidden select-none h-screen w-screen"
       style={{
-        width: "400px",
-        border: "4px solid white",
-        boxShadow: "0 20px 60px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.5) inset",
+        width: "100%",
+        height: "100vh",
       }}
     >
       {/* Window Title Bar - draggable area for Electron */}
       <div
-        className="bg-gradient-to-r from-purple-400 to-pink-400 px-4 py-3 flex items-center justify-between"
+        className="bg-gradient-to-r from-purple-400 to-pink-400 px-4 pt-10 pb-3 flex items-center justify-center"
         style={{ WebkitAppRegion: "drag" } as React.CSSProperties}
       >
         <div className="flex items-center gap-2">
           <Cloud className="w-5 h-5 text-white" />
           <h2 className="text-white font-bold text-lg tracking-wide">Chicago Weather</h2>
-        </div>
-        <div className="flex gap-2" style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}>
-          <Button
-            size="icon"
-            variant="ghost"
-            className="w-7 h-7 rounded-full bg-yellow-300 hover:bg-yellow-400 transition-colors"
-            onClick={handleMinimize}
-          >
-            <Minus className="w-4 h-4 text-gray-700" />
-          </Button>
-          <Button
-            size="icon"
-            variant="ghost"
-            className="w-7 h-7 rounded-full bg-red-400 hover:bg-red-500 transition-colors"
-            onClick={handleClose}
-          >
-            <X className="w-4 h-4 text-white" />
-          </Button>
         </div>
       </div>
 
