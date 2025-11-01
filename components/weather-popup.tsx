@@ -28,7 +28,7 @@ export function WeatherPopup() {
       setLoading(true)
       // Using OpenWeatherMap API - free tier
       const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=Chicago&units=imperial&appid=YOUR_API_KEY`,
+        `https://api.openweathermap.org/data/2.5/weather?q=Chicago&units=imperial&appid=8a9380703f509f16b0ba9e40518dace0`,
       )
 
       if (!response.ok) {
