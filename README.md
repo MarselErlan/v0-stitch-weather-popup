@@ -17,7 +17,30 @@ _Automatically synced with your [v0.app](https://v0.app) deployments_
 - 💫 Smooth animations and transitions
 - 🌡️ Temperature, humidity, and wind speed display
 
-## Quick Start
+## 📥 Installation (For Users)
+
+**Want to just use the app?** Download the latest `.dmg` file from the [Releases page](../../releases).
+
+⚠️ **Important**: macOS will block the app because it's not code-signed. Follow these steps:
+
+### Easy Installation Steps:
+
+1. Download `Stitch Weather-1.0.0.dmg`
+2. Open the DMG and drag the app to Applications
+3. **Right-click** (or Control+click) on "Stitch Weather"
+4. Select **"Open"** from the menu
+5. Click **"Open"** again in the security dialog
+6. The app is now trusted! 🎉
+
+**Alternative**: Run this command in Terminal:
+
+```bash
+xattr -cr "/Applications/Stitch Weather.app"
+```
+
+📖 **Full installation guide**: See [INSTALLATION.md](INSTALLATION.md) for detailed instructions and troubleshooting.
+
+## Quick Start (For Developers)
 
 ### For Development (Web Version)
 
