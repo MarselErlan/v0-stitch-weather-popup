@@ -34,6 +34,10 @@ function createWindow() {
     // Uncomment to enable: mainWindow.webContents.openDevTools({ mode: "detach" })
   } else {
     mainWindow.loadFile(path.join(__dirname, "../out/index.html"))
+    // Enable DevTools to debug
+    setTimeout(() => {
+      mainWindow?.webContents.openDevTools({ mode: "detach" })
+    }, 1000)
   }
 
   // Handle window close

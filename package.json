@@ -88,6 +88,7 @@
   "build": {
     "appId": "com.stitchweather.app",
     "productName": "Stitch Weather",
+    "asar": false,
     "mac": {
       "category": "public.app-category.weather",
       "target": [
