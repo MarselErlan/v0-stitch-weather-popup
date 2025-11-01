@@ -8,7 +8,8 @@
 /out/
 
 # production
-/build
+/build/*
+!/build/ICON_README.md
 
 # debug
 npm-debug.log*

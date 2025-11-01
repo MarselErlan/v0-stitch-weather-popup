@@ -2,7 +2,7 @@
 
 A cute desktop weather widget featuring Stitch that shows real-time Chicago weather with delightful animations.
 
-*Automatically synced with your [v0.app](https://v0.app) deployments*
+_Automatically synced with your [v0.app](https://v0.app) deployments_
 
 [![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/ethanabduraimov-7965s-projects/v0-stitch-weather-popup)
 [![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/lscK7e4SDa9)
@@ -22,10 +22,13 @@ A cute desktop weather widget featuring Stitch that shows real-time Chicago weat
 ### For Development (Web Version)
 
 \`\`\`bash
+
 # Install dependencies
+
 npm install
 
 # Run development server
+
 npm run dev
 \`\`\`
 
@@ -38,35 +41,43 @@ See [ELECTRON_BUILD_INSTRUCTIONS.md](ELECTRON_BUILD_INSTRUCTIONS.md) for detaile
 **Quick build:**
 
 \`\`\`bash
+
 # Install dependencies
+
 npm install
 
+# Generate app icon (optional but recommended)
+
+npm run generate:icon
+
 # Test in development mode
+
 npm run electron:dev
 
 # Build Mac app
+
 npm run electron:build
 \`\`\`
 
-Your app will be in the `release/` folder.
+Your app will be in the `release/` folder as `Stitch Weather.app` and `Stitch Weather-1.0.0.dmg`.
 
 ## Project Structure
 
 \`\`\`
-├── app/                    # Next.js app directory
-│   ├── page.tsx           # Main page
-│   ├── layout.tsx         # Root layout
-│   └── globals.css        # Global styles with animations
-├── components/            # React components
-│   ├── weather-popup.tsx  # Main weather widget
-│   └── ui/               # UI components (shadcn)
-├── electron/             # Electron main process
-│   ├── main.ts          # Electron entry point
-│   ├── preload.ts       # Preload script for IPC
-│   └── types.d.ts       # Electron type definitions
-├── public/              # Static assets
-│   └── stitch-transparent.jpg  # Stitch character image
-└── ELECTRON_BUILD_INSTRUCTIONS.md  # Build guide
+├── app/ # Next.js app directory
+│ ├── page.tsx # Main page
+│ ├── layout.tsx # Root layout
+│ └── globals.css # Global styles with animations
+├── components/ # React components
+│ ├── weather-popup.tsx # Main weather widget
+│ └── ui/ # UI components (shadcn)
+├── electron/ # Electron main process
+│ ├── main.ts # Electron entry point
+│ ├── preload.ts # Preload script for IPC
+│ └── types.d.ts # Electron type definitions
+├── public/ # Static assets
+│ └── stitch-transparent.jpg # Stitch character image
+└── ELECTRON_BUILD_INSTRUCTIONS.md # Build guide
 \`\`\`
 
 ## Configuration
@@ -83,7 +94,7 @@ Edit the city in `components/weather-popup.tsx`:
 
 \`\`\`typescript
 const response = await fetch(
-  `https://api.openweathermap.org/data/2.5/weather?q=YourCity&units=imperial&appid=YOUR_API_KEY`
+`https://api.openweathermap.org/data/2.5/weather?q=YourCity&units=imperial&appid=YOUR_API_KEY`
 )
 \`\`\`
 
@@ -99,15 +110,24 @@ const response = await fetch(
 
 ## Scripts
 
+### Web Development
+
 - `npm run dev` - Start Next.js development server
 - `npm run build` - Build Next.js for production
-- `npm run electron:dev` - Run Electron app in development
-- `npm run electron:build` - Build Mac desktop app
+- `npm start` - Start production server
+
+### Desktop App
+
+- `npm run generate:icon` - Generate Mac app icon from Stitch image
+- `npm run electron:dev` - Run Electron app in development mode
+- `npm run electron:build` - Build Mac desktop app (.app and .dmg)
 - `npm run electron:start` - Start built Electron app
+- `npm run build:electron` - Compile Electron TypeScript files only
 
 ## Building for Distribution
 
 See [ELECTRON_BUILD_INSTRUCTIONS.md](ELECTRON_BUILD_INSTRUCTIONS.md) for:
+
 - Creating DMG installers
 - Code signing (optional)
 - App notarization (optional)

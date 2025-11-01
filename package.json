@@ -7,10 +7,12 @@
   "main": "dist-electron/main.js",
   "scripts": {
     "build": "next build",
+    "build:electron": "tsc -p tsconfig.electron.json",
     "dev": "next dev",
-    "electron:build": "npm run build && next export && electron-builder",
-    "electron:dev": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron .\"",
-    "electron:start": "electron .",
+    "electron:build": "npm run build && npm run build:electron && electron-builder",
+    "electron:dev": "npm run build:electron && concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron:start": "npm run build:electron && electron .",
+    "generate:icon": "chmod +x scripts/generate-icon.sh && ./scripts/generate-icon.sh",
     "postinstall": "electron-builder install-app-deps",
     "lint": "eslint .",
     "start": "next start"
